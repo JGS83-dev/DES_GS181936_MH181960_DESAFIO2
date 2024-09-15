@@ -8,6 +8,7 @@ namespace UsuarioAPI.Models
         public int Id { get; set; }
 
         [Required]
+        [StringLength(30, MinimumLength = 3)]
         public string Nombre { get; set; } = string.Empty;
         
         public string? Descripcion { get; set; }

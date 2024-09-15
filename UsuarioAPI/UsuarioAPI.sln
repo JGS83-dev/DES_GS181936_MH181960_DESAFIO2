@@ -5,7 +5,9 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsuarioAPI", "UsuarioAPI.csproj", "{5511AA45-70A0-4FFD-94E7-B0E235E49151}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGateway", "..\APIGateway\APIGateway.csproj", "{37064DB2-E26A-4388-8285-52C2A6AD0822}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway", "..\APIGateway\APIGateway.csproj", "{37064DB2-E26A-4388-8285-52C2A6AD0822}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsuarioAPI.Tests", "..\UsuarioAPI.Tests\UsuarioAPI.Tests.csproj", "{AECE9520-317E-440B-B47E-C8B2F2010B5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{37064DB2-E26A-4388-8285-52C2A6AD0822}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37064DB2-E26A-4388-8285-52C2A6AD0822}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37064DB2-E26A-4388-8285-52C2A6AD0822}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AECE9520-317E-440B-B47E-C8B2F2010B5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECE9520-317E-440B-B47E-C8B2F2010B5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECE9520-317E-440B-B47E-C8B2F2010B5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AECE9520-317E-440B-B47E-C8B2F2010B5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
