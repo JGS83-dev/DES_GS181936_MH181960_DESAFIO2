@@ -1,0 +1,49 @@
+services:
+#Servicio API GATEWAY    
+    gateway-api:
+        image: desafio2/gateway-api:1.0
+        build:
+            context: .
+            dockerfile: APIGateway/Dockerfile
+            target: final
+        ports:
+            - 5000:8080
+        # depends_on:
+        #     usuarios-api:
+        #         condition: service_healthy
+#Servicio USUARIOS API
+    # usuarios-api:
+    #     image: desafio2/usuarios-api:1.0
+    #     build:
+    #       context: .
+    #       dockerfile: UsuarioAPI/Dockerfile
+    #       target: final
+    #     ports:
+    #       - 7116:8081
+    #     depends_on:
+    #        - cache
+    #        - db
+#Servicio Redis Cache
+    cache:
+        image: redis:6.2-alpine
+        restart: always
+        ports:
+          - '6379:6379'
+        command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+        volumes: 
+          - cache:/data
+#Servicio SQL Server
+    db:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        restart: always
+        environment:
+          - SA_PASSWORD="Admin123"
+          - ACCEPT_EULA="Y"
+          - MSSQL_PID="Express"
+        ports:
+          - "1433:1433"
+        volumes:
+          - sqlserver-data:/var/mssql/data
+volumes:
+    sqlserver-data:
+    cache:
