@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using UsuarioAPI.Models;
+using System.Text.Json;
 
 namespace UsuarioAPI.Controllers
 {
@@ -14,30 +11,48 @@ namespace UsuarioAPI.Controllers
     public class PermisosController : ControllerBase
     {
         private readonly UsuarioContext _context;
+        private readonly IConnectionMultiplexer _redis;
 
-        public PermisosController(UsuarioContext context)
+        public PermisosController(UsuarioContext context, IConnectionMultiplexer redis)
         {
             _context = context;
+            _redis = redis;
         }
 
         // GET: api/Permisos
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Permiso>>> GetPermisos()
         {
-            return await _context.Permisos.ToListAsync();
+            var db = _redis.GetDatabase();
+            string cacheKey = "permisoList";
+            var permisosCache = await db.StringGetAsync(cacheKey);
+            if (!permisosCache.IsNullOrEmpty)
+            {
+                return JsonSerializer.Deserialize<List<Permiso>>(permisosCache);
+            }
+            var permisos = await _context.Permisos.ToListAsync();
+            await db.StringSetAsync(cacheKey, JsonSerializer.Serialize(permisos), TimeSpan.FromMinutes(10));
+            return permisos;
         }
 
         // GET: api/Permisos/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Permiso>> GetPermiso(int id)
         {
-            var permiso = await _context.Permisos.FindAsync(id);
+            var db = _redis.GetDatabase();
+            string cacheKey = "permiso_" + id.ToString();
+            var permisoCache = await db.StringGetAsync(cacheKey);
 
+            if (!permisoCache.IsNullOrEmpty)
+            {
+                return JsonSerializer.Deserialize<Permiso>(permisoCache);
+            }
+            var permiso = await _context.Permisos.FindAsync(id);
             if (permiso == null)
             {
                 return NotFound();
             }
-
+            await db.StringSetAsync(cacheKey, JsonSerializer.Serialize(permiso), TimeSpan.FromSeconds(10));
             return permiso;
         }
 
@@ -56,6 +71,11 @@ namespace UsuarioAPI.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                var db = _redis.GetDatabase();
+                string cacheKeyPermiso = "permiso_" + id.ToString();
+                string cacheKeyList = "permisoList";
+                await db.KeyDeleteAsync(cacheKeyPermiso);
+                await db.KeyDeleteAsync(cacheKeyList);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -79,7 +99,9 @@ namespace UsuarioAPI.Controllers
         {
             _context.Permisos.Add(permiso);
             await _context.SaveChangesAsync();
-
+            var db = _redis.GetDatabase();
+            string cacheKeyList = "permisoList";
+            await db.KeyDeleteAsync(cacheKeyList);
             return CreatedAtAction("GetPermiso", new { id = permiso.Id }, permiso);
         }
 
@@ -95,7 +117,11 @@ namespace UsuarioAPI.Controllers
 
             _context.Permisos.Remove(permiso);
             await _context.SaveChangesAsync();
-
+            var db = _redis.GetDatabase();
+            string cacheKeyPermiso = "permiso_" + id.ToString();
+            string cacheKeyList = "permisoList";
+            await db.KeyDeleteAsync(cacheKeyPermiso);
+            await db.KeyDeleteAsync(cacheKeyList);
             return NoContent();
         }
 

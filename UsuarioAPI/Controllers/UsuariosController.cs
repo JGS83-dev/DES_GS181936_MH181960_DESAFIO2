@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UsuarioAPI.Models;
+using StackExchange.Redis;
+using System.Text.Json;
 
 namespace UsuarioAPI.Controllers
 {
@@ -14,30 +11,48 @@ namespace UsuarioAPI.Controllers
     public class UsuariosController : ControllerBase
     {
         private readonly UsuarioContext _context;
+        private readonly IConnectionMultiplexer _redis;
 
-        public UsuariosController(UsuarioContext context)
+        public UsuariosController(UsuarioContext context, IConnectionMultiplexer redis)
         {
             _context = context;
+            _redis = redis;
         }
 
         // GET: api/Usuarios
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
-            return await _context.Usuarios.ToListAsync();
+            var db = _redis.GetDatabase();
+            string cacheKey = "usuarioList";
+            var usuariosCache = await db.StringGetAsync(cacheKey);
+            if (!usuariosCache.IsNullOrEmpty)
+            {
+                return JsonSerializer.Deserialize<List<Usuario>>(usuariosCache);
+            }
+            var usuarios = await _context.Usuarios.ToListAsync();
+            await db.StringSetAsync(cacheKey, JsonSerializer.Serialize(usuarios), TimeSpan.FromMinutes(10));
+            return usuarios;
         }
 
         // GET: api/Usuarios/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
+            var db = _redis.GetDatabase();
+            string cacheKey = "usuario_" + id.ToString();
+            var usuarioCache = await db.StringGetAsync(cacheKey);
 
+            if (!usuarioCache.IsNullOrEmpty)
+            {
+                return JsonSerializer.Deserialize<Usuario>(usuarioCache);
+            }
+            var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null)
             {
                 return NotFound();
             }
-
+            await db.StringSetAsync(cacheKey, JsonSerializer.Serialize(usuario), TimeSpan.FromSeconds(10));
             return usuario;
         }
 
@@ -56,6 +71,11 @@ namespace UsuarioAPI.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                var db = _redis.GetDatabase();
+                string cacheKeyUsuario = "usuario_" + id.ToString();
+                string cacheKeyList = "usuarioList";
+                await db.KeyDeleteAsync(cacheKeyUsuario);
+                await db.KeyDeleteAsync(cacheKeyList);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -79,7 +99,9 @@ namespace UsuarioAPI.Controllers
         {
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
-
+            var db = _redis.GetDatabase();
+            string cacheKeyList = "usuarioList";
+            await db.KeyDeleteAsync(cacheKeyList);
             return CreatedAtAction("GetUsuario", new { id = usuario.Id }, usuario);
         }
 
@@ -95,7 +117,11 @@ namespace UsuarioAPI.Controllers
 
             _context.Usuarios.Remove(usuario);
             await _context.SaveChangesAsync();
-
+            var db = _redis.GetDatabase();
+            string cacheKeyUsuario = "usuario_" + id.ToString();
+            string cacheKeyList = "usuarioList";
+            await db.KeyDeleteAsync(cacheKeyUsuario);
+            await db.KeyDeleteAsync(cacheKeyList);
             return NoContent();
         }
 

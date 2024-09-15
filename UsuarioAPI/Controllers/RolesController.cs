@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UsuarioAPI.Models;
+using StackExchange.Redis;
+using System.Text.Json;
 
 namespace UsuarioAPI.Controllers
 {
@@ -14,30 +11,48 @@ namespace UsuarioAPI.Controllers
     public class RolesController : ControllerBase
     {
         private readonly UsuarioContext _context;
+        private readonly IConnectionMultiplexer _redis;
 
-        public RolesController(UsuarioContext context)
+        public RolesController(UsuarioContext context, IConnectionMultiplexer redis)
         {
             _context = context;
+            _redis = redis;
         }
 
         // GET: api/Roles
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Rol>>> GetRoles()
         {
-            return await _context.Roles.ToListAsync();
+            var db = _redis.GetDatabase();
+            string cacheKey = "rolList";
+            var rolesCache = await db.StringGetAsync(cacheKey);
+            if (!rolesCache.IsNullOrEmpty)
+            {
+                return JsonSerializer.Deserialize<List<Rol>>(rolesCache);
+            }
+            var roles = await _context.Roles.ToListAsync();
+            await db.StringSetAsync(cacheKey, JsonSerializer.Serialize(roles), TimeSpan.FromMinutes(10));
+            return roles;
         }
 
         // GET: api/Roles/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Rol>> GetRol(int id)
         {
-            var rol = await _context.Roles.FindAsync(id);
+            var db = _redis.GetDatabase();
+            string cacheKey = "rol_" + id.ToString();
+            var rolCache = await db.StringGetAsync(cacheKey);
 
+            if (!rolCache.IsNullOrEmpty)
+            {
+                return JsonSerializer.Deserialize<Rol>(rolCache);
+            }
+            var rol = await _context.Roles.FindAsync(id);
             if (rol == null)
             {
                 return NotFound();
             }
-
+            await db.StringSetAsync(cacheKey, JsonSerializer.Serialize(rol), TimeSpan.FromSeconds(10));
             return rol;
         }
 
@@ -56,6 +71,11 @@ namespace UsuarioAPI.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                var db = _redis.GetDatabase();
+                string cacheKeyRol = "rol_" + id.ToString();
+                string cacheKeyList = "rolList";
+                await db.KeyDeleteAsync(cacheKeyRol);
+                await db.KeyDeleteAsync(cacheKeyList);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -79,7 +99,9 @@ namespace UsuarioAPI.Controllers
         {
             _context.Roles.Add(rol);
             await _context.SaveChangesAsync();
-
+            var db = _redis.GetDatabase();
+            string cacheKeyList = "rolList";
+            await db.KeyDeleteAsync(cacheKeyList);
             return CreatedAtAction("GetRol", new { id = rol.Id }, rol);
         }
 
@@ -95,7 +117,11 @@ namespace UsuarioAPI.Controllers
 
             _context.Roles.Remove(rol);
             await _context.SaveChangesAsync();
-
+            var db = _redis.GetDatabase();
+            string cacheKeyRol = "rol_" + id.ToString();
+            string cacheKeyList = "rolList";
+            await db.KeyDeleteAsync(cacheKeyRol);
+            await db.KeyDeleteAsync(cacheKeyList);
             return NoContent();
         }
 
