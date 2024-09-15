@@ -1,0 +1,350 @@
+{
+    "Routes": [
+        //Permisos
+        {
+            "DownstreamPathTemplate": "/api/permisos",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/permisos",
+            "UpstreamHttpMethod": [ "Get" ],
+            "DownstreamHttpMethod": "Get",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/permisos",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/permisos",
+            "UpstreamHttpMethod": [ "Post" ],
+            "DownstreamHttpMethod": "Post",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/permisos/{id}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/permisos/{id}",
+            "UpstreamHttpMethod": [ "Get" ],
+            "DownstreamHttpMethod": "Get",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/permisos/{id}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/permisos/{id}",
+            "UpstreamHttpMethod": [ "Put" ],
+            "DownstreamHttpMethod": "Put",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/permisos/{id}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/permisos/{id}",
+            "UpstreamHttpMethod": [ "Delete" ],
+            "DownstreamHttpMethod": "Delete",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        //Roles
+        {
+            "DownstreamPathTemplate": "/api/roles",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/roles",
+            "UpstreamHttpMethod": [ "Get" ],
+            "DownstreamHttpMethod": "Get",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/roles",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/roles",
+            "UpstreamHttpMethod": [ "Post" ],
+            "DownstreamHttpMethod": "Post",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/roles/{id}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/roles/{id}",
+            "UpstreamHttpMethod": [ "Get" ],
+            "DownstreamHttpMethod": "Get",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/roles/{id}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/roles/{id}",
+            "UpstreamHttpMethod": [ "Put" ],
+            "DownstreamHttpMethod": "Put",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/roles/{id}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/roles/{id}",
+            "UpstreamHttpMethod": [ "Delete" ],
+            "DownstreamHttpMethod": "Delete",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        //Usuarios
+        {
+            "DownstreamPathTemplate": "/api/usuarios",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/usuarios",
+            "UpstreamHttpMethod": [ "Get" ],
+            "DownstreamHttpMethod": "Get",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/usuarios",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/usuarios",
+            "UpstreamHttpMethod": [ "Post" ],
+            "DownstreamHttpMethod": "Post",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/usuarios/{id}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/usuarios/{id}",
+            "UpstreamHttpMethod": [ "Get" ],
+            "DownstreamHttpMethod": "Get",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/usuarios/{id}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/usuarios/{id}",
+            "UpstreamHttpMethod": [ "Put" ],
+            "DownstreamHttpMethod": "Put",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/usuarios/{id}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7116
+                }
+            ],
+            "UpstreamPathTemplate": "/usuarios/{id}",
+            "UpstreamHttpMethod": [ "Delete" ],
+            "DownstreamHttpMethod": "Delete",
+            "SwaggerKey": "Usuarios",
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "1m",
+                "PeriodTimespan": 60,
+                "Limit": 5
+            }
+        }
+    ],
+    "GlobalConfiguration": {
+        "BaseUrl": "https://localhost:5000",
+        "FileCacheOptions": {
+            "TtlSeconds": 60,
+            "Region": "default"
+        },
+        "SwaggerEndPoints": [
+            {
+                "Key": "Usuarios",
+                "Config": [
+                    {
+                        "Name": "Usuarios API",
+                        "Scheme": "https",
+                        "Host": "localhost",
+                        "Port": 7116,
+                        "Path": "/swagger/v1/swagger.json"
+                    }
+                ]
+            }
+        ]
+    },
+    "RateLimitOptions": {
+        "ClientWhiteList": [],
+        "EnableRateLimiting": true,
+        "Period": "1m",
+        "PeriodTimespan": 60,
+        "Limit": 100
+    }
+}
