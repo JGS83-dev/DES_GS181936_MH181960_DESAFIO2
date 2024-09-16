@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using UsuarioAPI.Models;
 using StackExchange.Redis;
 using System.Text.Json;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Net.Mail;
 
 namespace UsuarioAPI.Controllers
 {
@@ -37,6 +40,8 @@ namespace UsuarioAPI.Controllers
 
         // GET: api/Usuarios/5
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Usuario), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
             var db = _redis.GetDatabase();
@@ -64,6 +69,26 @@ namespace UsuarioAPI.Controllers
             if (id != usuario.Id)
             {
                 return BadRequest();
+            }
+
+            if (string.IsNullOrEmpty(usuario.Nombre) || string.IsNullOrEmpty(usuario.Email) || string.IsNullOrEmpty(usuario.Password))
+            {
+                return BadRequest("El nombre, email y contraseña no puede estar vació.");
+            }
+
+            if (usuario.Nombre.Length < 3 || usuario.Nombre.Length > 50)
+            {
+                return BadRequest("Longitud mínima de 3 caracteres y máxima de 50.");
+            }
+
+            if (usuario.Password.Length < 8)
+            {
+                return BadRequest("La contraseña debe tener al menos 8 caracteres.");
+            }
+
+            if (!this.EsCorreoValido(usuario.Email))
+            {
+                return BadRequest("El Correo Electrónico no es valido.");
             }
 
             _context.Entry(usuario).State = EntityState.Modified;
@@ -97,6 +122,28 @@ namespace UsuarioAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
         {
+            if (string.IsNullOrEmpty(usuario.Nombre) || string.IsNullOrEmpty(usuario.Email) || string.IsNullOrEmpty(usuario.Password))
+            {
+                return BadRequest("El nombre, email y contraseña no puede estar vació.");
+            }
+
+            if (usuario.Nombre.Length < 3 || usuario.Nombre.Length > 50)
+            {
+                return BadRequest("Longitud mínima de 3 caracteres y máxima de 50.");
+            }            
+
+            if (usuario.Password.Length < 8)
+            {
+                return BadRequest("La contraseña debe tener al menos 8 caracteres.");
+            }
+
+            if(!this.EsCorreoValido(usuario.Email))
+            {
+                return BadRequest("El Correo Electrónico no es valido.");
+            }
+
+            usuario.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
+
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
             var db = _redis.GetDatabase();
@@ -128,6 +175,19 @@ namespace UsuarioAPI.Controllers
         private bool UsuarioExists(int id)
         {
             return _context.Usuarios.Any(e => e.Id == id);
+        }
+
+        public bool EsCorreoValido(string email)
+        {
+            try
+            {
+                var mailAddress = new MailAddress(email);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
         }
     }
 }

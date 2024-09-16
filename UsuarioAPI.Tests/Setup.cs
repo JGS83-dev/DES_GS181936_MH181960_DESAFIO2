@@ -1,5 +1,6 @@
 ﻿using UsuarioAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace UsuarioAPI.Tests
 {
@@ -14,6 +15,6 @@ namespace UsuarioAPI.Tests
             var context = new UsuarioContext(options);
             context.Database.EnsureCreated();
             return context;
-        }
+        }        
     }
 }
