@@ -25,7 +25,7 @@ namespace UsuarioAPI.Tests
             var result = controller.GetUsuario(1);
 
             // Assert: Verificar que se obtiene el resultado correcto
-            var actionResult = Assert.IsType<ActionResult<Usuario>>(result);
+            var actionResult = Assert.IsType<ActionResult<Usuario>>(result.Result);
             var returnValue = Assert.IsType<Usuario>(actionResult.Value);
             Assert.Equal("SysAdmin", returnValue.Nombre);
         }
