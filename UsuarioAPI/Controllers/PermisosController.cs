@@ -66,6 +66,16 @@ namespace UsuarioAPI.Controllers
                 return BadRequest();
             }
 
+            if (string.IsNullOrEmpty(permiso.Nombre))
+            {
+                return BadRequest("El nombre no puede estar vació.");
+            }
+
+            if (permiso.Nombre.Length < 3 || permiso.Nombre.Length > 30)
+            {
+                return BadRequest("Longitud mínima del nombre es de 3 caracteres y máxima de 30.");
+            }
+
             _context.Entry(permiso).State = EntityState.Modified;
 
             try
@@ -97,6 +107,16 @@ namespace UsuarioAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Permiso>> PostPermiso(Permiso permiso)
         {
+            if (string.IsNullOrEmpty(permiso.Nombre))
+            {
+                return BadRequest("El nombre no puede estar vació.");
+            }
+
+            if (permiso.Nombre.Length < 3 || permiso.Nombre.Length > 30)
+            {
+                return BadRequest("Longitud mínima del nombre es de 3 caracteres y máxima de 30.");
+            }
+
             _context.Permisos.Add(permiso);
             await _context.SaveChangesAsync();
             var db = _redis.GetDatabase();

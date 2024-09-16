@@ -5,10 +5,10 @@ using StackExchange.Redis;
 
 namespace UsuarioAPI.Tests
 {
-    public class UsuariosControllerTests
+    public class PermisosControllerTests
     {
         [Fact]
-        public async Task PostUsuario_AgregaUsuario_CuandoUsuarioEsValido()
+        public async Task PostPermiso_AgregaPermiso_CuandoPermisoEsValido()
         {
             //Arrange
             // Arrange: Configuración del contexto y las dependencias externas
@@ -16,26 +16,24 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new PermisosController(context, redis);
 
             // Act: Llamar al método del controlador
-            var nuevoUsuario = new Usuario
+            var nuevoPermiso = new Permiso
             {
-                Nombre = "Administrador",
-                Email = "admin@udb.edu.sv",
-                Password = "aguanteMillo",
-                RolId = 1,
+                Nombre = "Crear Permisos",
+                Descripcion = null,
             };
 
-            var result = await controller.PostUsuario(nuevoUsuario);
+            var result = await controller.PostPermiso(nuevoPermiso);
 
             //Assert
             var createdResult = Assert.IsType<CreatedAtActionResult>(result.Result);
-            var usuario = Assert.IsType<Usuario>(createdResult.Value);
+            Assert.IsType<Permiso>(createdResult.Value);
         }
 
         [Fact]
-        public async Task PostUsuario_NoAgregaUsuario_CuandoNombreEsNulo()
+        public async Task PostPermiso_NoAgregaPermiso_CuandoNombreEsNulo()
         {
             //Arrange
             // Arrange: Configuración del contexto y las dependencias externas
@@ -43,25 +41,23 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new PermisosController(context, redis);
 
             // Act: Llamar al método del controlador
-            var nuevoUsuario = new Usuario
+            var nuevoPermiso = new Permiso
             {
                 Nombre = null,
-                Email = "sysadmin@udb.edu.sv",
-                Password = "aguanteRiver",
-                RolId = 1,
+                Descripcion = null,
             };
 
-            var result = await controller.PostUsuario(nuevoUsuario);
+            var result = await controller.PostPermiso(nuevoPermiso);
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result.Result);
         }
 
         [Fact]
-        public async Task PostUsuario_NoAgregaUsuario_CuandoPasswordNoContiene8Caracteres()
+        public async Task PostPermiso_NoAgregaPermiso_CuandoNombreContieneMenosDe3Caracteres()
         {
             //Arrange
             // Arrange: Configuración del contexto y las dependencias externas
@@ -69,87 +65,58 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new PermisosController(context, redis);
 
             // Act: Llamar al método del controlador
-            var nuevoUsuario = new Usuario
+            var nuevoPermiso = new Permiso
             {
-                Nombre = "SysAdmin 2",
-                Email = "sysadmin@udb.edu.sv",
-                Password = "river",
-                RolId = 1,
+                Nombre = "No",
+                Descripcion = null,
             };
 
-            var result = await controller.PostUsuario(nuevoUsuario);
+            var result = await controller.PostPermiso(nuevoPermiso);
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result.Result);
-        }
+        }        
 
         [Fact]
-        public async Task PostUsuario_NoAgregaUsuario_CuandoEmailNoEsValido()
-        {
-            //Arrange
-            // Arrange: Configuración del contexto y las dependencias externas
-            var context = Setup.GetDatabaseContext();
-            var redis = this.GetConnectionMultiplexer();
-
-            // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
-
-            // Act: Llamar al método del controlador
-            var nuevoUsuario = new Usuario
-            {
-                Nombre = "SysAdmin 5",
-                Email = "aguanteRiver.com",
-                Password = "aguanteRiver",
-                RolId = 1,
-            };
-
-            var result = await controller.PostUsuario(nuevoUsuario);
-
-            //Assert
-            Assert.IsType<BadRequestObjectResult>(result.Result);
-        }
-
-        [Fact]
-        public void GetUsuario_RetornaUsuario_CuandoIdEsValido()
+        public void GetPermiso_RetornaPermiso_CuandoIdEsValido()
         {
             // Arrange: Configuración del contexto y las dependencias externas
             var context = Setup.GetDatabaseContext();
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new PermisosController(context, redis);
 
             // Act: Llamar al método del controlador
-            var result = controller.GetUsuario(1);
+            var result = controller.GetPermiso(1);
 
             // Assert: Verificar que se obtiene el resultado correcto
-            var actionResult = Assert.IsType<ActionResult<Usuario>>(result.Result);
-            var returnValue = Assert.IsType<Usuario>(actionResult.Value);
-            Assert.Equal("SysAdmin", returnValue.Nombre);
+            var actionResult = Assert.IsType<ActionResult<Permiso>>(result.Result);
+            var returnValue = Assert.IsType<Permiso>(actionResult.Value);            
         }
 
         [Fact]
-        public async Task GetUsuario_RetornaUsuario_CuandoIdNoEsValido()
+        public async Task GetPermiso_RetornaPermiso_CuandoIdNoEsValido()
         {
             // Arrange: Configuración del contexto y las dependencias externas
             var context = Setup.GetDatabaseContext();
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new PermisosController(context, redis);
 
             // Act: Llamar al método del controlador
-            var result = await controller.GetUsuario(999);
+            var result = await controller.GetPermiso(999);
 
             //Assert
             Assert.IsType<NotFoundResult>(result.Result);
         }
 
         [Fact]
-        public async Task UpdateUsuario_ActualizaUsuario_CuandoUsuarioEsValido()
+        public async Task UpdatePermiso_ActualizaPermiso_CuandoPermisoEsValido()
         {
             //Arrange
             // Arrange: Configuración del contexto y las dependencias externas
@@ -157,26 +124,24 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new PermisosController(context, redis);
 
             // Act: Llamar al método del controlador
-            var usuario = new Usuario
+            var permiso = new Permiso
             {
-                Id = 4,
-                Nombre = "Administrador 3",
-                Email = "admin@udb.edu.sv",
-                Password = "aguanteMillo",
-                RolId = 1,
+                Id = 6,
+                Nombre = "Crear Permisos",
+                Descripcion = "Crear Permisos",
             };
 
-            var result = await controller.PutUsuario(4, usuario);
+            var result = await controller.PutPermiso(6, permiso);
 
             //Assert
             Assert.IsType<NoContentResult>(result);
         }
 
         [Fact]
-        public async Task DeleteUsuario_EliminaUsuario_CuandoIdNoEsValido()
+        public async Task DeletePermiso_EliminaPermiso_CuandoIdNoEsValido()
         {
             //Arrange
             // Arrange: Configuración del contexto y las dependencias externas
@@ -184,17 +149,17 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new PermisosController(context, redis);
 
             // Act: Llamar al método del controlador           
-            var result = await controller.DeleteUsuario(999);
+            var result = await controller.DeletePermiso(999);
 
             //Assert
             Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
-        public async Task DeleteUsuario_EliminaUsuario_CuandoIdEsValido()
+        public async Task DeletePermiso_EliminaPermiso_CuandoIdEsValido()
         {
             //Arrange
             // Arrange: Configuración del contexto y las dependencias externas
@@ -202,10 +167,10 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new PermisosController(context, redis);
 
             // Act: Llamar al método del controlador           
-            var result = await controller.DeleteUsuario(6);
+            var result = await controller.DeletePermiso(8);
 
             //Assert
             Assert.IsType<NoContentResult>(result);

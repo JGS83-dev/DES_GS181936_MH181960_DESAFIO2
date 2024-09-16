@@ -60,10 +60,20 @@ namespace UsuarioAPI.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRol(int id, Rol rol)
-        {
+        {            
             if (id != rol.Id)
             {
                 return BadRequest();
+            }
+
+            if (string.IsNullOrEmpty(rol.Nombre))
+            {
+                return BadRequest("El nombre no puede estar vació.");
+            }
+
+            if (rol.Nombre.Length < 3 || rol.Nombre.Length > 30)
+            {
+                return BadRequest("Longitud mínima del nombre es de 3 caracteres y máxima de 30.");
             }
 
             _context.Entry(rol).State = EntityState.Modified;
@@ -97,6 +107,16 @@ namespace UsuarioAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Rol>> PostRol(Rol rol)
         {
+            if (string.IsNullOrEmpty(rol.Nombre))
+            {
+                return BadRequest("El nombre no puede estar vació.");
+            }
+            
+            if (rol.Nombre.Length < 3 || rol.Nombre.Length > 30)
+            {
+                return BadRequest("Longitud mínima del nombre es de 3 caracteres y máxima de 30.");
+            }
+
             _context.Roles.Add(rol);
             await _context.SaveChangesAsync();
             var db = _redis.GetDatabase();

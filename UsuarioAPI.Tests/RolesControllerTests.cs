@@ -5,10 +5,10 @@ using StackExchange.Redis;
 
 namespace UsuarioAPI.Tests
 {
-    public class UsuariosControllerTests
+    public class RolesControllerTests
     {
         [Fact]
-        public async Task PostUsuario_AgregaUsuario_CuandoUsuarioEsValido()
+        public async Task PostRole_AgregaRole_CuandoRoleEsValido()
         {
             //Arrange
             // Arrange: Configuración del contexto y las dependencias externas
@@ -16,26 +16,24 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new RolesController(context, redis);
 
             // Act: Llamar al método del controlador
-            var nuevoUsuario = new Usuario
+            var nuevoRol = new Rol
             {
-                Nombre = "Administrador",
-                Email = "admin@udb.edu.sv",
-                Password = "aguanteMillo",
-                RolId = 1,
+                Nombre = "Vendedor 3",
+                Descripcion = null,
             };
 
-            var result = await controller.PostUsuario(nuevoUsuario);
+            var result = await controller.PostRol(nuevoRol);
 
             //Assert
             var createdResult = Assert.IsType<CreatedAtActionResult>(result.Result);
-            var usuario = Assert.IsType<Usuario>(createdResult.Value);
+            var rol = Assert.IsType<Rol>(createdResult.Value);
         }
 
         [Fact]
-        public async Task PostUsuario_NoAgregaUsuario_CuandoNombreEsNulo()
+        public async Task PostRol_NoAgregaRol_CuandoNombreEsNulo()
         {
             //Arrange
             // Arrange: Configuración del contexto y las dependencias externas
@@ -43,25 +41,23 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new RolesController(context, redis);
 
             // Act: Llamar al método del controlador
-            var nuevoUsuario = new Usuario
+            var nuevoRol = new Rol
             {
                 Nombre = null,
-                Email = "sysadmin@udb.edu.sv",
-                Password = "aguanteRiver",
-                RolId = 1,
+                Descripcion = null,
             };
 
-            var result = await controller.PostUsuario(nuevoUsuario);
+            var result = await controller.PostRol(nuevoRol);
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result.Result);
         }
 
         [Fact]
-        public async Task PostUsuario_NoAgregaUsuario_CuandoPasswordNoContiene8Caracteres()
+        public async Task PostRol_NoAgregaRol_CuandoNombreContieneMenosDe3Caracteres()
         {
             //Arrange
             // Arrange: Configuración del contexto y las dependencias externas
@@ -69,87 +65,58 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new RolesController(context, redis);
 
             // Act: Llamar al método del controlador
-            var nuevoUsuario = new Usuario
+            var nuevoRol = new Rol
             {
-                Nombre = "SysAdmin 2",
-                Email = "sysadmin@udb.edu.sv",
-                Password = "river",
-                RolId = 1,
+                Nombre = "Si",
+                Descripcion = null,
             };
 
-            var result = await controller.PostUsuario(nuevoUsuario);
+            var result = await controller.PostRol(nuevoRol);
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result.Result);
-        }
+        }        
 
         [Fact]
-        public async Task PostUsuario_NoAgregaUsuario_CuandoEmailNoEsValido()
-        {
-            //Arrange
-            // Arrange: Configuración del contexto y las dependencias externas
-            var context = Setup.GetDatabaseContext();
-            var redis = this.GetConnectionMultiplexer();
-
-            // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
-
-            // Act: Llamar al método del controlador
-            var nuevoUsuario = new Usuario
-            {
-                Nombre = "SysAdmin 5",
-                Email = "aguanteRiver.com",
-                Password = "aguanteRiver",
-                RolId = 1,
-            };
-
-            var result = await controller.PostUsuario(nuevoUsuario);
-
-            //Assert
-            Assert.IsType<BadRequestObjectResult>(result.Result);
-        }
-
-        [Fact]
-        public void GetUsuario_RetornaUsuario_CuandoIdEsValido()
+        public void GetRol_RetornaRol_CuandoIdEsValido()
         {
             // Arrange: Configuración del contexto y las dependencias externas
             var context = Setup.GetDatabaseContext();
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new RolesController(context, redis);
 
             // Act: Llamar al método del controlador
-            var result = controller.GetUsuario(1);
+            var result = controller.GetRol(1);
 
             // Assert: Verificar que se obtiene el resultado correcto
-            var actionResult = Assert.IsType<ActionResult<Usuario>>(result.Result);
-            var returnValue = Assert.IsType<Usuario>(actionResult.Value);
-            Assert.Equal("SysAdmin", returnValue.Nombre);
+            var actionResult = Assert.IsType<ActionResult<Rol>>(result.Result);
+            var returnValue = Assert.IsType<Rol>(actionResult.Value);            
         }
 
         [Fact]
-        public async Task GetUsuario_RetornaUsuario_CuandoIdNoEsValido()
+        public async Task GetRol_RetornaRol_CuandoIdNoEsValido()
         {
             // Arrange: Configuración del contexto y las dependencias externas
             var context = Setup.GetDatabaseContext();
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new RolesController(context, redis);
 
             // Act: Llamar al método del controlador
-            var result = await controller.GetUsuario(999);
+            var result = await controller.GetRol(999);
 
             //Assert
             Assert.IsType<NotFoundResult>(result.Result);
         }
 
         [Fact]
-        public async Task UpdateUsuario_ActualizaUsuario_CuandoUsuarioEsValido()
+        public async Task UpdateRol_ActualizaRol_CuandoRolEsValido()
         {
             //Arrange
             // Arrange: Configuración del contexto y las dependencias externas
@@ -157,26 +124,24 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new RolesController(context, redis);
 
             // Act: Llamar al método del controlador
-            var usuario = new Usuario
+            var rol = new Rol
             {
-                Id = 4,
-                Nombre = "Administrador 3",
-                Email = "admin@udb.edu.sv",
-                Password = "aguanteMillo",
-                RolId = 1,
+                Id = 2,
+                Nombre = "Vendedor 2",
+                Descripcion = "Ahora es personal ...",
             };
 
-            var result = await controller.PutUsuario(4, usuario);
+            var result = await controller.PutRol(2, rol);
 
             //Assert
             Assert.IsType<NoContentResult>(result);
         }
 
         [Fact]
-        public async Task DeleteUsuario_EliminaUsuario_CuandoIdNoEsValido()
+        public async Task DeleteRol_EliminaRol_CuandoIdNoEsValido()
         {
             //Arrange
             // Arrange: Configuración del contexto y las dependencias externas
@@ -184,17 +149,17 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new RolesController(context, redis);
 
             // Act: Llamar al método del controlador           
-            var result = await controller.DeleteUsuario(999);
+            var result = await controller.DeleteRol(999);
 
             //Assert
             Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
-        public async Task DeleteUsuario_EliminaUsuario_CuandoIdEsValido()
+        public async Task DeleteRol_EliminaRol_CuandoIdEsValido()
         {
             //Arrange
             // Arrange: Configuración del contexto y las dependencias externas
@@ -202,10 +167,10 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new RolesController(context, redis);
 
             // Act: Llamar al método del controlador           
-            var result = await controller.DeleteUsuario(6);
+            var result = await controller.DeleteRol(3);
 
             //Assert
             Assert.IsType<NoContentResult>(result);
