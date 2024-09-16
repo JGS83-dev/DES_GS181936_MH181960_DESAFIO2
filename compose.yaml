@@ -7,7 +7,7 @@ services:
             dockerfile: Dockerfile
             target: runtime
         ports:
-            - 5000:8080
+            - "5000:5000"
         depends_on:
             - usuarios-api
 #Servicio USUARIOS API
@@ -18,7 +18,7 @@ services:
           dockerfile: Dockerfile
           target: runtime
         ports:
-          - 7116:8081
+          - "7116:7116"
         depends_on:
            - cache
            - db
