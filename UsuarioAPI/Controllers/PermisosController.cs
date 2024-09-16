@@ -71,9 +71,9 @@ namespace UsuarioAPI.Controllers
                 return BadRequest("El nombre no puede estar vació.");
             }
 
-            if (permiso.Nombre.Length < 3 || permiso.Nombre.Length > 30)
+            if (permiso.Nombre.Length < 3 || permiso.Nombre.Length > 50)
             {
-                return BadRequest("Longitud mínima del nombre es de 3 caracteres y máxima de 30.");
+                return BadRequest("La longitud mínima del nombre es de 3 caracteres y máxima de 50.");
             }
 
             _context.Entry(permiso).State = EntityState.Modified;
@@ -112,9 +112,9 @@ namespace UsuarioAPI.Controllers
                 return BadRequest("El nombre no puede estar vació.");
             }
 
-            if (permiso.Nombre.Length < 3 || permiso.Nombre.Length > 30)
+            if (permiso.Nombre.Length < 3 || permiso.Nombre.Length > 50)
             {
-                return BadRequest("Longitud mínima del nombre es de 3 caracteres y máxima de 30.");
+                return BadRequest("La longitud mínima del nombre es de 3 caracteres y máxima de 50.");
             }
 
             _context.Permisos.Add(permiso);

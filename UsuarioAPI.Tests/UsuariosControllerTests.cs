@@ -120,7 +120,7 @@ namespace UsuarioAPI.Tests
             var redis = this.GetConnectionMultiplexer();
 
             // Inicializar el controlador con el contexto y Redis
-            var controller = new UsuariosController(context, redis);
+            var controller = new UsuariosController(context, redis);            
 
             // Act: Llamar al método del controlador
             var result = controller.GetUsuario(1);
@@ -159,17 +159,23 @@ namespace UsuarioAPI.Tests
             // Inicializar el controlador con el contexto y Redis
             var controller = new UsuariosController(context, redis);
 
-            // Act: Llamar al método del controlador
-            var usuario = new Usuario
+            var nuevoUsuario = new Usuario
             {
-                Id = 4,
-                Nombre = "Administrador 3",
-                Email = "admin@udb.edu.sv",
-                Password = "aguanteMillo",
+                Nombre = "Contador",
+                Email = "contador@udb.edu.sv",
+                Password = "aguanteRiver",
                 RolId = 1,
             };
 
-            var result = await controller.PutUsuario(4, usuario);
+            var resultPost = await controller.PostUsuario(nuevoUsuario);
+            var createdResultPost = Assert.IsType<CreatedAtActionResult>(resultPost.Result);
+            var usuario = Assert.IsType<Usuario>(createdResultPost.Value);
+
+            // Act: Llamar al método del controlador
+            usuario.Nombre = "Contador Externo";
+            usuario.Email = "contadorexterno@udb.edu.sv";
+
+            var result = await controller.PutUsuario(usuario.Id, usuario);
 
             //Assert
             Assert.IsType<NoContentResult>(result);
@@ -204,8 +210,20 @@ namespace UsuarioAPI.Tests
             // Inicializar el controlador con el contexto y Redis
             var controller = new UsuariosController(context, redis);
 
+            var nuevoUsuario = new Usuario
+            {
+                Nombre = "Vendedor",
+                Email = "vendededor@udb.edu.sv",
+                Password = "aguanteMillo",
+                RolId = 1,
+            };
+
+            var resultPost = await controller.PostUsuario(nuevoUsuario);            
+            var createdResultPost = Assert.IsType<CreatedAtActionResult>(resultPost.Result);
+            var usuario = Assert.IsType<Usuario>(createdResultPost.Value);
+
             // Act: Llamar al método del controlador           
-            var result = await controller.DeleteUsuario(6);
+            var result = await controller.DeleteUsuario(usuario.Id);
 
             //Assert
             Assert.IsType<NoContentResult>(result);

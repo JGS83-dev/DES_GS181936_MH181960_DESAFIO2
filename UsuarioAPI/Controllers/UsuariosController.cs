@@ -78,7 +78,7 @@ namespace UsuarioAPI.Controllers
 
             if (usuario.Nombre.Length < 3 || usuario.Nombre.Length > 50)
             {
-                return BadRequest("Longitud mínima de 3 caracteres y máxima de 50.");
+                return BadRequest("La longitud mínima de Nombre es de 3 caracteres y máxima de 50.");
             }
 
             if (usuario.Password.Length < 8)
@@ -129,7 +129,7 @@ namespace UsuarioAPI.Controllers
 
             if (usuario.Nombre.Length < 3 || usuario.Nombre.Length > 50)
             {
-                return BadRequest("Longitud mínima de 3 caracteres y máxima de 50.");
+                return BadRequest("La longitud mínima de Nombre es de 3 caracteres y máxima de 50.");
             }            
 
             if (usuario.Password.Length < 8)

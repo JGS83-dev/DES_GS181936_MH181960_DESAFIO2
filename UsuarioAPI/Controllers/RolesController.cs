@@ -73,7 +73,7 @@ namespace UsuarioAPI.Controllers
 
             if (rol.Nombre.Length < 3 || rol.Nombre.Length > 30)
             {
-                return BadRequest("Longitud mínima del nombre es de 3 caracteres y máxima de 30.");
+                return BadRequest("La longitud mínima del nombre es de 3 caracteres y máxima de 30.");
             }
 
             _context.Entry(rol).State = EntityState.Modified;
@@ -114,7 +114,7 @@ namespace UsuarioAPI.Controllers
             
             if (rol.Nombre.Length < 3 || rol.Nombre.Length > 30)
             {
-                return BadRequest("Longitud mínima del nombre es de 3 caracteres y máxima de 30.");
+                return BadRequest("La longitud mínima del nombre es de 3 caracteres y máxima de 30.");
             }
 
             _context.Roles.Add(rol);

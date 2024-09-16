@@ -126,15 +126,21 @@ namespace UsuarioAPI.Tests
             // Inicializar el controlador con el contexto y Redis
             var controller = new RolesController(context, redis);
 
-            // Act: Llamar al método del controlador
-            var rol = new Rol
+            var nuevoRol = new Rol
             {
-                Id = 2,
-                Nombre = "Vendedor 2",
-                Descripcion = "Ahora es personal ...",
+                Nombre = "Rol: Contador",
+                Descripcion = "Rol Contador",
             };
 
-            var result = await controller.PutRol(2, rol);
+            var resultPost = await controller.PostRol(nuevoRol);            
+            var createdResult = Assert.IsType<CreatedAtActionResult>(resultPost.Result);
+            var rol = Assert.IsType<Rol>(createdResult.Value);
+
+            // Act: Llamar al método del controlador
+            rol.Nombre = "Rol: Contador Externo";
+            rol.Descripcion = "Rol Contador Externo";
+
+            var result = await controller.PutRol(rol.Id, rol);
 
             //Assert
             Assert.IsType<NoContentResult>(result);
@@ -169,8 +175,18 @@ namespace UsuarioAPI.Tests
             // Inicializar el controlador con el contexto y Redis
             var controller = new RolesController(context, redis);
 
+            var nuevoRol = new Rol
+            {
+                Nombre = "Rol: Vendedor",
+                Descripcion = "Rol Vendedor",
+            };
+
+            var resultPost = await controller.PostRol(nuevoRol);
+            var createdResult = Assert.IsType<CreatedAtActionResult>(resultPost.Result);
+            var rol = Assert.IsType<Rol>(createdResult.Value);
+
             // Act: Llamar al método del controlador           
-            var result = await controller.DeleteRol(3);
+            var result = await controller.DeleteRol(rol.Id);
 
             //Assert
             Assert.IsType<NoContentResult>(result);

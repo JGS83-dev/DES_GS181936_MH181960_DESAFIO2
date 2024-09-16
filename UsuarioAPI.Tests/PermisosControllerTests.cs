@@ -126,15 +126,20 @@ namespace UsuarioAPI.Tests
             // Inicializar el controlador con el contexto y Redis
             var controller = new PermisosController(context, redis);
 
-            // Act: Llamar al método del controlador
-            var permiso = new Permiso
+            var nuevoPermiso = new Permiso
             {
-                Id = 6,
-                Nombre = "Crear Permisos",
-                Descripcion = "Crear Permisos",
+                Nombre = "Generar Informes",
+                Descripcion = null,
             };
 
-            var result = await controller.PutPermiso(6, permiso);
+            var resultPost = await controller.PostPermiso(nuevoPermiso);
+            var createdResult = Assert.IsType<CreatedAtActionResult>(resultPost.Result);
+            var permiso = Assert.IsType<Permiso>(createdResult.Value);
+
+            // Act: Llamar al método del controlador
+            permiso.Descripcion = "Generar Informes";
+
+            var result = await controller.PutPermiso(permiso.Id, permiso);
 
             //Assert
             Assert.IsType<NoContentResult>(result);
@@ -169,8 +174,18 @@ namespace UsuarioAPI.Tests
             // Inicializar el controlador con el contexto y Redis
             var controller = new PermisosController(context, redis);
 
+            var nuevoPermiso = new Permiso
+            {
+                Nombre = "Exportar Usuarios",
+                Descripcion = null,
+            };
+
+            var resultPost = await controller.PostPermiso(nuevoPermiso);
+            var createdResult = Assert.IsType<CreatedAtActionResult>(resultPost.Result);
+            var permiso = Assert.IsType<Permiso>(createdResult.Value);
+
             // Act: Llamar al método del controlador           
-            var result = await controller.DeletePermiso(8);
+            var result = await controller.DeletePermiso(permiso.Id);
 
             //Assert
             Assert.IsType<NoContentResult>(result);
