@@ -9,6 +9,7 @@ COPY . release/
 RUN dotnet publish -c Release -o /out
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS runtime
+COPY ocelot.json /app/ocelot.json
 WORKDIR /app
 COPY --from=build /out .
 
